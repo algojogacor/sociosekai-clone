@@ -1,26 +1,60 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── SOCIOSEKAI Design System ── */
+/* Hybrid: Linear Dark base + Spotify Green music accents */
+
+@theme {
+  /* Dark theme (default) */
+  --color-bg: #08090a;
+  --color-panel: #0f1011;
+  --color-surface: #191a1b;
+  --color-elevated: #252525;
+  --color-text-primary: #f7f8f8;
+  --color-text-secondary: #d0d6e0;
+  --color-text-muted: #8a8f98;
+  --color-accent-music: #1ed760;
+  --color-accent-music-hover: #1fdf64;
+  --color-accent-brand: #5e6ad2;
+  --color-accent-brand-hover: #828fff;
+  --color-accent-ai: #7170ff;
+  --color-accent-like: #f43f5e;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 8px 8px rgba(0, 0, 0, 0.3);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Light theme overrides */
+[data-theme="light"] {
+  --color-bg: #f7f8f8;
+  --color-panel: #ffffff;
+  --color-surface: #f3f4f5;
+  --color-elevated: #e8e8e8;
+  --color-text-primary: #111111;
+  --color-text-secondary: #444444;
+  --color-text-muted: #888888;
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-border-subtle: rgba(0, 0, 0, 0.06);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Base styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth transitions for theme switching */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

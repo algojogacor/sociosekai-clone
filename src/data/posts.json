@@ -1,0 +1,195 @@
+[
+  {
+    "id": "post-001",
+    "author": {
+      "name": "rin_0x",
+      "avatar": "https://picsum.photos/seed/avatar1/64/64"
+    },
+    "createdAt": "Apr 27, 2026 · 06:40 PM",
+    "title": "Getting back on the track",
+    "body": "setelah sekian lama vakum dari dunia per-forum-an, akhirnya balik lagi. rasanya nostalgia banget liat forum kayak gini masih hidup di 2026. semoga betah disini ya ges 🤞",
+    "imageUrl": "https://picsum.photos/seed/track/600/400",
+    "music": {
+      "trackName": "KIRA",
+      "artistName": "Ado",
+      "albumName": "残夢",
+      "artworkUrl": "https://picsum.photos/seed/kira/300/300",
+      "itunesUrl": "https://music.apple.com/jp/album/kira/1734567890"
+    },
+    "likes": 142,
+    "comments": 23,
+    "shares": 7
+  },
+  {
+    "id": "post-002",
+    "author": {
+      "name": "bima_sakti",
+      "avatar": "https://picsum.photos/seed/avatar2/64/64"
+    },
+    "createdAt": "Apr 27, 2026 · 09:15 PM",
+    "title": "Lebaran.",
+    "body": "Lebaran kali ini beda. Pertama kalinya mudik sendiri, naik motor dari Jakarta ke Semarang. Jalanan rame banget tapi surprisingly asik. Banyak ketemu random people di rest area, ada yang bagi-bagi ketupat gratis juga 😂\n\nPas nyampe rumah, kaget liat keponakan udah pada gede semua. Yang dulu masih bayi sekarang udah bisa nanya \"om kapan nikah?\" — damn, right in the feels.\n\nAnyway, selamat lebaran buat yang ngerayain ya. Mohon maaf lahir batin 🙏\n\nAma lek, enakeun pol 👍",
+    "imageUrl": "https://picsum.photos/seed/lebaran/600/400",
+    "likes": 287,
+    "comments": 56,
+    "shares": 19
+  },
+  {
+    "id": "post-003",
+    "author": {
+      "name": "hanako_99",
+      "avatar": "https://picsum.photos/seed/avatar3/64/64"
+    },
+    "createdAt": "Apr 28, 2026 · 11:22 AM",
+    "title": "Langsung saja happy ending 🥰",
+    "body": "baru selesai baca light novel series yang direkomendasiin temen, dan ternyata... langsung happy ending aja gitu. no drama berlebihan, no love triangle toxic, just two people figuring things out and being happy together.\n\nkadang kita butuh cerita yang sederhana tapi bikin senyum-senyum sendiri. 10/10 would recommend.",
+    "imageUrl": "https://picsum.photos/seed/happyending/600/400",
+    "music": {
+      "trackName": "Hands",
+      "artistName": "Kazuma Kiryu",
+      "albumName": "龍が如く",
+      "artworkUrl": "https://picsum.photos/seed/kiryu/300/300",
+      "itunesUrl": "https://music.apple.com/jp/album/hands/9876543210"
+    },
+    "likes": 198,
+    "comments": 34,
+    "shares": 12
+  },
+  {
+    "id": "post-004",
+    "author": {
+      "name": "prabogo",
+      "avatar": "https://picsum.photos/seed/avatar4/64/64"
+    },
+    "createdAt": "Apr 28, 2026 · 02:05 PM",
+    "title": "prabogo",
+    "body": "lagu ini bikin pengen jedag jedug sampe subuh 🕺\n\nsiapa disini yang masih dengerin DJ remix lokal? reply dong, spill playlist kalian 🔥",
+    "music": {
+      "trackName": "Dj Tabrak Tabrak Full Bass",
+      "artistName": "DJ Remix Indo",
+      "albumName": "Bass Mantap Vol. 7",
+      "artworkUrl": "https://picsum.photos/seed/tabrak/300/300",
+      "itunesUrl": "https://music.apple.com/id/album/dj-tabrak-tabrak-full-bass/1122334455"
+    },
+    "likes": 421,
+    "comments": 89,
+    "shares": 45
+  },
+  {
+    "id": "post-005",
+    "author": {
+      "name": "senja.cerita",
+      "avatar": "https://picsum.photos/seed/avatar5/64/64"
+    },
+    "createdAt": "Apr 29, 2026 · 07:30 AM",
+    "body": "pagi-pagi udah hujan deres. enaknya ngopi sambil dengerin suara hujan. simple pleasure yang nggak ada matinya ✨☕",
+    "likes": 67,
+    "comments": 8,
+    "shares": 2
+  },
+  {
+    "id": "post-006",
+    "author": {
+      "name": "dev_null",
+      "avatar": "https://picsum.photos/seed/avatar6/64/64"
+    },
+    "createdAt": "Apr 29, 2026 · 03:45 PM",
+    "body": "ada yang pernah ngalamin burnout pas ngerjain side project? gue udah 3 minggu stuck di satu fitur yang ternyata bug-nya cuma gara-gara typo satu huruf. one. single. character. \n\nmood: pengen banting laptop tapi sayang 😭",
+    "likes": 156,
+    "comments": 42,
+    "shares": 11
+  },
+  {
+    "id": "post-007",
+    "author": {
+      "name": "moon.light",
+      "avatar": "https://picsum.photos/seed/avatar7/64/64"
+    },
+    "createdAt": "Apr 30, 2026 · 09:10 PM",
+    "title": "rekomendasi anime slice of life",
+    "body": "butuh rekomendasi anime slice of life yang chill banget. yang nggak ada drama berat, nggak ada plot twist aneh, just vibes. \n\nsejauh ini udah nonton: Yuru Camp, Non Non Biyori, Aria. ada lagi yang se-vibes itu?",
+    "imageUrl": "https://picsum.photos/seed/anime/600/400",
+    "likes": 203,
+    "comments": 67,
+    "shares": 15
+  },
+  {
+    "id": "post-008",
+    "author": {
+      "name": "kopi_hitam",
+      "avatar": "https://picsum.photos/seed/avatar8/64/64"
+    },
+    "createdAt": "May 01, 2026 · 05:55 AM",
+    "body": "subuh itu waktunya:\n- orang taat ibadah ✅\n- orang insomnia scroll tiktok ✅\n- gue: nulis post nggak jelas di forum jam 5 pagi ✅✅✅",
+    "likes": 89,
+    "comments": 15,
+    "shares": 4
+  },
+  {
+    "id": "post-009",
+    "author": {
+      "name": "raincatcher",
+      "avatar": "https://picsum.photos/seed/avatar9/64/64"
+    },
+    "createdAt": "May 01, 2026 · 01:30 PM",
+    "title": "foto langit senja hari ini",
+    "body": "nggak ada filter, nggak ada edit. langit emang lagi cantik banget sore ini. kadang alam ngasih kita free wallpaper 🧡🌇",
+    "imageUrl": "https://picsum.photos/seed/senja/600/400",
+    "music": {
+      "trackName": "Lemon",
+      "artistName": "Kenshi Yonezu",
+      "albumName": "Lemon - Single",
+      "artworkUrl": "https://picsum.photos/seed/lemon/300/300",
+      "itunesUrl": "https://music.apple.com/jp/album/lemon/1345678901"
+    },
+    "likes": 312,
+    "comments": 44,
+    "shares": 28
+  },
+  {
+    "id": "post-010",
+    "author": {
+      "name": "techbro_kece",
+      "avatar": "https://picsum.photos/seed/avatar10/64/64"
+    },
+    "createdAt": "May 01, 2026 · 08:15 PM",
+    "body": "hot take: dark mode itu bukan fitur, itu hak asasi.\n\napps yang nggak punya dark mode di 2026 harusnya kena sanksi sosial 😤",
+    "likes": 534,
+    "comments": 102,
+    "shares": 36
+  },
+  {
+    "id": "post-011",
+    "author": {
+      "name": "rin_0x",
+      "avatar": "https://picsum.photos/seed/avatar1/64/64"
+    },
+    "createdAt": "May 02, 2026 · 10:00 AM",
+    "title": "mini review: chill hop playlist",
+    "body": "akhir-akhir ini ketagihan dengerin chill hop / lofi hip hop pas kerja. entah kenapa bikin fokus dan calming di saat bersamaan.\n\nrekomendasi artist: Nujabes (RIP legend 🕊️), Uyama Hiroto, DJ Okawari, Haruka Nakamura.\n\nkalian ada rekomendasi yang mirip-mirip? spill di reply ya.",
+    "music": {
+      "trackName": "Counting Stars",
+      "artistName": "Nujabes",
+      "albumName": "Modal Soul",
+      "artworkUrl": "https://picsum.photos/seed/nujabes/300/300",
+      "itunesUrl": "https://music.apple.com/jp/album/counting-stars/123456789"
+    },
+    "likes": 178,
+    "comments": 39,
+    "shares": 22
+  },
+  {
+    "id": "post-012",
+    "author": {
+      "name": "sociosekai_mod",
+      "avatar": "https://picsum.photos/seed/avatar11/64/64"
+    },
+    "createdAt": "May 02, 2026 · 08:00 PM",
+    "title": "Welcome to Sociosekai! 🎉",
+    "body": "Selamat datang di Sociosekai, forum baru buat kita semua! ✨\n\nDisini kalian bisa bebas ngobrol, sharing cerita, rekomendasi musik, foto random, atau apapun yang lagi ada di pikiran.\n\nRules simpel:\n- Respect each other 🤝\n- No spam / SARA 🚫\n- Have fun! 🎊\n\nEnjoy your stay!",
+    "imageUrl": "https://picsum.photos/seed/welcome/600/400",
+    "likes": 612,
+    "comments": 98,
+    "shares": 54
+  }
+]
