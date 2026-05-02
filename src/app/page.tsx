@@ -1,30 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { PostFeed } from '@/components/post/PostFeed';
 import type { Post } from '@/types';
-import staticPosts from '@/data/posts.json';
-
-const STORAGE_KEY = 'sociosekai-local-posts';
-
-function getMergedPosts(): Post[] {
-  if (typeof window === 'undefined') return staticPosts;
-  try {
-    const local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    return [...local, ...staticPosts];
-  } catch {
-    return staticPosts;
-  }
-}
 
 export default function Home() {
-  const [posts, setPosts] = useState<Post[]>(getMergedPosts);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Refresh on mount to pick up any new localStorage posts
+  const fetchPosts = useCallback(async () => {
+    try {
+      const res = await fetch('/api/posts');
+      setPosts(await res.json());
+    } catch { /* empty */ }
+    finally { setLoading(false); }
+  }, []);
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPosts(getMergedPosts());
-  }, []);
+    fetchPosts();
+  }, [fetchPosts]);
+
+  if (loading) return <p className="py-20 text-center text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading posts...</p>;
 
   return <PostFeed posts={posts} />;
 }

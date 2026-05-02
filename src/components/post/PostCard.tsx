@@ -54,7 +54,7 @@ export function PostCard({ post }: { post: Post }) {
       {post.music && <MusicEmbed music={post.music} />}
 
       {/* Actions */}
-      <PostActions likes={post.likes} comments={post.comments} shares={post.shares} />
+      <PostActions postId={post.id} likes={post.likes} comments={post.comments} shares={post.shares} />
     </article>
   );
 }
