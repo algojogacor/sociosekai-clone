@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { suggestMusic, generateText } from '@/lib/ai';
+import { suggestMusic } from '@/lib/ai';
 import { searchTracks } from '@/lib/music';
 import type { MusicEmbed as MusicEmbedType } from '@/types';
 

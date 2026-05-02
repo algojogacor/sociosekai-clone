@@ -1,9 +1,12 @@
+'use client';
+
 import type { Post } from '@/types';
 import { PostActions } from './PostActions';
+import { MusicEmbed } from '@/components/music/MusicEmbed';
 
 export function PostCard({ post }: { post: Post }) {
   const borderColor = 'var(--color-border-subtle)';
-  
+
   return (
     <article className="border-b py-5" style={{ borderColor }}>
       {/* Header */}
@@ -47,36 +50,8 @@ export function PostCard({ post }: { post: Post }) {
         />
       )}
 
-      {/* Music Embed (inline until MusicEmbed component exists) */}
-      {post.music && (
-        <div
-          className="mb-3 flex items-center gap-3 rounded-lg p-3"
-          style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
-        >
-          <img
-            src={post.music.artworkUrl}
-            alt={post.music.trackName}
-            className="h-14 w-14 flex-shrink-0 rounded"
-          />
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-              {post.music.trackName}
-            </p>
-            <p className="truncate text-xs" style={{ color: 'var(--color-text-muted)' }}>
-              {post.music.artistName} • {post.music.albumName}
-            </p>
-          </div>
-          <a
-            href={post.music.itunesUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-black transition-colors hover:opacity-80"
-            style={{ background: 'var(--color-accent-music)' }}
-          >
-            ▶
-          </a>
-        </div>
-      )}
+      {/* Music Embed */}
+      {post.music && <MusicEmbed music={post.music} />}
 
       {/* Actions */}
       <PostActions likes={post.likes} comments={post.comments} shares={post.shares} />
