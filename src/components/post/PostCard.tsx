@@ -70,10 +70,8 @@ export function PostCard({ post }: { post: Post }) {
             href={post.music.itunesUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-black transition-colors"
+            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-black transition-colors hover:opacity-80"
             style={{ background: 'var(--color-accent-music)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-music-hover)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-accent-music)'; }}
           >
             ▶
           </a>
