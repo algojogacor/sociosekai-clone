@@ -18,12 +18,9 @@ function getInitialTheme(): Theme {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
   }, [theme]);
 
   const toggleTheme = () => {
@@ -34,11 +31,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
+  // Always wrap with provider to avoid SSR errors.
+  // The `mounted` flag prevents the theme from toggling during SSR.
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
