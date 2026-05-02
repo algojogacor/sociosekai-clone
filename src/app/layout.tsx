@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { Header } from '@/components/layout/Header';
 import { Tabs } from '@/components/layout/Tabs';
+import { AiChat } from '@/components/ai/AiChat';
 import './globals.css';
 
 const inter = Inter({
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <Tabs />
           <main className="mx-auto max-w-[680px] px-4">{children}</main>
+          <AiChat />
         </ThemeProvider>
       </body>
     </html>
