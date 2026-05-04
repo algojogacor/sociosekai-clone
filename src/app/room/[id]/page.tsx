@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ArrowLeft, Send } from 'lucide-react';
 
 export default function RoomChatPage() {
@@ -11,7 +9,6 @@ export default function RoomChatPage() {
   const router = useRouter();
   const [messages, setMessages] = useState<any[]>([]);
   const [body, setBody] = useState('');
-  const [room, setRoom] = useState<any>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const fetchMessages = async () => {
@@ -20,54 +17,74 @@ export default function RoomChatPage() {
     setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
   };
 
-  useEffect(() => { fetchMessages(); const iv = setInterval(fetchMessages, 3000); return () => clearInterval(iv); }, [id]);
+  useEffect(() => { fetchMessages(); const iv = setInterval(fetchMessages, 2000); return () => clearInterval(iv); }, [id]);
 
   const send = async () => {
     if (!body.trim()) return;
     await fetch(`/api/rooms/${id}/messages`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ body, authorName: 'Guest' }),
+      body: JSON.stringify({ body, authorName: 'You' }),
     });
     setBody('');
     fetchMessages();
   };
 
   return (
-    <div className="flex flex-col h-[100dvh] max-w-2xl mx-auto">
-      <div className="flex items-center gap-3 p-4 border-b border-border/50">
-        <Button variant="ghost" size="icon" onClick={() => router.push('/room')}>
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="font-semibold text-lg">Room Chat</h1>
+    <div className="flex flex-col h-[100dvh] max-w-2xl mx-auto bg-background">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-border/30">
+        <button onClick={() => router.push('/room')} className="p-1.5 -ml-1.5 rounded-md hover:bg-accent transition-colors">
+          <ArrowLeft className="h-4 w-4 text-muted-foreground" />
+        </button>
+        <div>
+          <h1 className="text-[0.9375rem] font-[510] tracking-[-0.01em]">Room Chat</h1>
+          <p className="text-[0.6875rem] text-muted-foreground">{messages.length} messages</p>
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.map((m, i) => (
-          <div key={m.id} className="flex flex-col">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xs font-medium text-primary">{m.author_name}</span>
-              <span className="text-[10px] text-muted-foreground">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1.5">
+        {messages.map((m, i) => {
+          const isMine = m.author_name === 'You' || m.author_name === 'Algojo';
+          const showAuthor = i === 0 || messages[i-1]?.author_name !== m.author_name;
+          return (
+            <div key={m.id} className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
+              {showAuthor && (
+                <span className={`text-[0.6875rem] font-[510] mb-0.5 px-1 ${isMine ? 'text-brand' : 'text-muted-foreground'}`}>
+                  {m.author_name}
+                </span>
+              )}
+              <div className={`chat-bubble ${isMine ? 'chat-bubble-mine' : ''}`}>
+                <p className="text-[0.875rem] leading-relaxed">{m.body}</p>
+              </div>
+              <span className="text-[0.625rem] text-muted-foreground mt-0.5 px-1">
                 {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
-            <p className="text-sm">{m.body}</p>
-          </div>
-        ))}
+          );
+        })}
         <div ref={bottomRef} />
       </div>
 
-      <div className="flex gap-2 p-4 border-t border-border/50">
-        <Input
-          placeholder="Type a message..."
-          value={body}
-          onChange={e => setBody(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && send()}
-          className="flex-1"
-        />
-        <Button size="icon" onClick={send}>
-          <Send className="h-4 w-4" />
-        </Button>
+      {/* Input */}
+      <div className="px-4 py-3 border-t border-border/30">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            placeholder="Type a message..."
+            value={body}
+            onChange={e => setBody(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && send()}
+            className="input-premium flex-1"
+          />
+          <button
+            onClick={send}
+            className="p-2 rounded-md bg-primary text-primary-foreground hover:bg-brand-hover transition-colors"
+          >
+            <Send className="h-4 w-4" />
+          </button>
+        </div>
       </div>
     </div>
   );
