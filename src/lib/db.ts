@@ -88,6 +88,17 @@ export async function initSchema() {
   await db.execute('CREATE INDEX IF NOT EXISTS idx_posts_created ON posts(created_at DESC)');
   await db.execute('CREATE INDEX IF NOT EXISTS idx_likes_post ON likes(post_id)');
   await db.execute('CREATE INDEX IF NOT EXISTS idx_comments_post ON comments(post_id)');
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS room_messages (
+      id TEXT PRIMARY KEY,
+      room_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      body TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await db.execute('CREATE INDEX IF NOT EXISTS idx_messages_room ON room_messages(room_id, created_at DESC)');
   
   console.log('[Turso] Schema initialized');
 }

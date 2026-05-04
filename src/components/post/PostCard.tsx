@@ -4,6 +4,7 @@ import { MusicEmbed } from '@/components/music/MusicEmbed';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import ReactMarkdown from 'react-markdown';
 
 export function PostCard({ post }: { post: Post }) {
   return (
@@ -28,9 +29,9 @@ export function PostCard({ post }: { post: Post }) {
             {post.title}
           </h3>
         )}
-        <p className="text-[15px] leading-relaxed text-muted-foreground whitespace-pre-wrap">
-          {post.body}
-        </p>
+        <div className="text-[15px] leading-relaxed text-muted-foreground prose prose-sm dark:prose-invert max-w-none [&_a]:text-primary [&_code]:bg-accent [&_code]:px-1 [&_code]:rounded [&_pre]:bg-accent [&_pre]:p-3 [&_pre]:rounded-lg">
+          <ReactMarkdown>{post.body}</ReactMarkdown>
+        </div>
         {post.imageUrl && (
           <img
             src={post.imageUrl}
