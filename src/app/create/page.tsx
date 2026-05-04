@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Sparkles, Wand2, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { AiComposer } from '@/components/ai/AiComposer';
 import { AiSuggester } from '@/components/ai/AiSuggester';
 import { searchTracks } from '@/lib/music';
 import { useAuth } from '@/lib/auth-context';
+import { RichEditor } from '@/components/editor/RichEditor';
 import { toast } from 'sonner';
 import type { MusicEmbed } from '@/types';
 
@@ -114,7 +114,7 @@ export default function CreatePostPage() {
 
         <div>
           <label className="block text-sm font-medium mb-1.5 text-muted-foreground">What&apos;s on your mind?</label>
-          <Textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder="Share your thoughts..." rows={4} />
+          <RichEditor content={body} onChange={(html, text) => setBody(html || text)} />
         </div>
 
         <div>
