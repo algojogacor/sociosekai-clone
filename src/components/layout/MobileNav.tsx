@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { House, SquarePlus, MessagesSquare, Menu } from 'lucide-react';
+import { House, SquarePlus, MessagesSquare, Menu, User, LogIn, LogOut } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +26,7 @@ const otherLinks = [
 export function MobileNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const { user, logout } = useAuth();
 
   return (
     <div className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[85%] sm:w-3/4 z-50 bg-background/60 backdrop-blur-lg supports-[backdrop-filter]:bg-background/50 border border-border/40 rounded-full pb-safe shadow-lg">
@@ -56,6 +58,26 @@ export function MobileNav() {
                 {link.label}
               </DropdownMenuItem>
             ))}
+            <div className="h-px bg-border my-1" />
+            {user ? (
+              <>
+                <DropdownMenuItem onClick={() => router.push('/profile')}>
+                  <User className="mr-2 h-4 w-4" /> Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { logout(); router.push('/'); }}>
+                  <LogOut className="mr-2 h-4 w-4" /> Sign Out
+                </DropdownMenuItem>
+              </>
+            ) : (
+              <>
+                <DropdownMenuItem onClick={() => router.push('/login')}>
+                  <LogIn className="mr-2 h-4 w-4" /> Sign In
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/signup')}>
+                  <User className="mr-2 h-4 w-4" /> Register
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

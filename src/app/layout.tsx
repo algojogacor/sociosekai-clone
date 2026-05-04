@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
+import { AuthProvider } from '@/lib/auth-context';
 import { Header } from '@/components/layout/Header';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { Toaster } from 'sonner';
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
+          <AuthProvider>
           <Header />
           <main>{children}</main>
           <MobileNav />
@@ -40,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               },
             }}
           />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

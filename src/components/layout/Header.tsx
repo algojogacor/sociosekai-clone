@@ -3,7 +3,9 @@
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { Sun, Moon, Menu, Plus, MessageSquare, House, BookOpen } from 'lucide-react';
+import { Sun, Moon, Menu, Plus, MessageSquare, House, BookOpen, User, LogOut, LogIn } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
@@ -36,6 +38,8 @@ const otherLinks = [
 
 export function Header() {
   const { theme, setTheme } = useTheme();
+  const { user, logout } = useAuth();
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -112,11 +116,28 @@ export function Header() {
           <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-border/50">
             <DropdownMenu>
               <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium rounded-md px-3 h-7 border border-border/50 bg-background hover:bg-accent/50 transition-colors duration-200 text-muted-foreground hover:text-foreground">
-                Account
+                {user ? user.name : 'Account'}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Sign In</DropdownMenuItem>
-                <DropdownMenuItem>Register</DropdownMenuItem>
+                {user ? (
+                  <>
+                    <DropdownMenuItem onClick={() => router.push('/profile')}>
+                      <User className="mr-2 h-4 w-4" /> Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => { logout(); router.push('/'); }}>
+                      <LogOut className="mr-2 h-4 w-4" /> Sign Out
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem onClick={() => router.push('/login')}>
+                      <LogIn className="mr-2 h-4 w-4" /> Sign In
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/signup')}>
+                      <User className="mr-2 h-4 w-4" /> Register
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

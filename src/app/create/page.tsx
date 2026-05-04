@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Sparkles, Wand2, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,13 @@ import { Separator } from '@/components/ui/separator';
 import { AiComposer } from '@/components/ai/AiComposer';
 import { AiSuggester } from '@/components/ai/AiSuggester';
 import { searchTracks } from '@/lib/music';
+import { useAuth } from '@/lib/auth-context';
 import { toast } from 'sonner';
 import type { MusicEmbed } from '@/types';
 
 export default function CreatePostPage() {
   const router = useRouter();
+  const { user, loading } = useAuth();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -25,6 +27,19 @@ export default function CreatePostPage() {
   const [selectedMusic, setSelectedMusic] = useState<MusicEmbed | null>(null);
   const [searching, setSearching] = useState(false);
   const [posting, setPosting] = useState(false);
+
+  // Auth guard
+  useEffect(() => {
+    if (!loading && !user) {
+      toast.error('Please sign in to create a post');
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
+  // Auto-fill author name
+  useEffect(() => {
+    if (user?.name) setAuthorName(user.name);
+  }, [user]);
 
   const handleMusicSearch = async () => {
     if (!musicQuery.trim() || searching) return;
@@ -63,10 +78,20 @@ export default function CreatePostPage() {
         toast.error('Failed to post');
       }
     } catch { 
-      toast.error('Network error'); 
+      toast.error('Network error');
     }
     finally { setPosting(false); }
   };
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[80vh] items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   return (
     <div className="py-8 pb-24 px-4 max-w-2xl mx-auto">
