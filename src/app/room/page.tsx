@@ -1,24 +1,25 @@
+'use client';
+
 import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function RoomPage() {
   return (
-    <div className="py-8">
-      <Link href="/" className="inline-flex items-center gap-1 text-sm mb-6 hover:underline" style={{ color: 'var(--color-text-muted)' }}>
-        ← Back
+    <div className="py-8 px-4 max-w-2xl mx-auto pb-24">
+      <Link href="/" className="inline-flex items-center gap-1 mb-6 text-muted-foreground hover:text-foreground text-sm transition-colors">
+        <ArrowLeft className="w-4 h-4" /> Back
       </Link>
-      <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text-primary)' }}>Room</h1>
+      <h1 className="text-2xl font-bold mb-6 text-foreground">Room</h1>
       <div className="max-w-sm space-y-4">
-        <input placeholder="Room Name" disabled className="w-full rounded-md border px-4 py-2.5 text-sm opacity-60"
-          style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }} />
-        <input placeholder="Key Access" disabled className="w-full rounded-md border px-4 py-2.5 text-sm opacity-60"
-          style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }} />
+        <Input placeholder="Room Name" disabled className="opacity-60" />
+        <Input placeholder="Key Access" disabled className="opacity-60" />
         <div className="flex gap-3">
-          <button disabled className="rounded-md px-6 py-2.5 text-sm font-medium opacity-50 text-white"
-            style={{ background: 'var(--color-accent-brand)' }}>Join Room</button>
-          <button disabled className="rounded-md px-6 py-2.5 text-sm font-medium opacity-50"
-            style={{ background: 'var(--color-surface)', color: 'var(--color-text-muted)', borderColor: 'var(--color-border)' }}>Create Room</button>
+          <Button disabled>Join Room</Button>
+          <Button variant="outline" disabled>Create Room</Button>
         </div>
-        <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Sign in to access rooms.</p>
+        <p className="text-xs text-muted-foreground">Sign in to access rooms.</p>
       </div>
     </div>
   );

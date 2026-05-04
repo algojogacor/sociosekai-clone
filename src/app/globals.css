@@ -1,10 +1,101 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 /* ── SOCIOSEKAI Design System ── */
-/* Hybrid: Linear Dark base + Spotify Green music accents */
+/* Dark-first: all default vars are dark, .light overrides for light mode */
 
-@theme {
-  /* Dark theme (default) */
+@theme inline {
+  --font-sans: var(--font-inter);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ── DARK THEME (default) ── */
+:root {
+  --radius: 0.625rem;
+
+  --background: #08090a;
+  --foreground: #f7f8f8;
+  --card: #0f1011;
+  --card-foreground: #f7f8f8;
+  --popover: #191a1b;
+  --popover-foreground: #f7f8f8;
+  --primary: #5e6ad2;
+  --primary-foreground: #ffffff;
+  --secondary: #191a1b;
+  --secondary-foreground: #d0d6e0;
+  --muted: #191a1b;
+  --muted-foreground: #8a8f98;
+  --accent: rgba(255,255,255,0.06);
+  --accent-foreground: #f7f8f8;
+  --destructive: #f43f5e;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255,255,255,0.08);
+  --input: rgba(255,255,255,0.08);
+  --ring: #5e6ad2;
+
+  --chart-1: #5e6ad2;
+  --chart-2: #1ed760;
+  --chart-3: #7170ff;
+  --chart-4: #f43f5e;
+  --chart-5: #8a8f98;
+
+  --sidebar: #0f1011;
+  --sidebar-foreground: #f7f8f8;
+  --sidebar-primary: #5e6ad2;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(255,255,255,0.06);
+  --sidebar-accent-foreground: #f7f8f8;
+  --sidebar-border: rgba(255,255,255,0.08);
+  --sidebar-ring: #5e6ad2;
+
+  /* SOCIOSEKAI custom accents */
+  --music: #1ed760;
+  --music-hover: #1fdf64;
+  --brand: #5e6ad2;
+  --brand-hover: #828fff;
+  --ai: #7170ff;
+  --like: #f43f5e;
+
+  /* Legacy custom properties for AI components and old code */
   --color-bg: #08090a;
   --color-panel: #0f1011;
   --color-surface: #191a1b;
@@ -20,20 +111,40 @@
   --color-accent-like: #f43f5e;
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-subtle: rgba(255, 255, 255, 0.05);
-
-  /* Border radius */
-  --radius-sm: 4px;
-  --radius: 8px;
-  --radius-lg: 12px;
-  --radius-pill: 9999px;
-
-  /* Shadows */
-  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-elevated: 0 8px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Light theme overrides */
-[data-theme="light"] {
+/* ── LIGHT THEME ── */
+.light {
+  --background: #f7f8f8;
+  --foreground: #111111;
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --popover: #ffffff;
+  --popover-foreground: #111111;
+  --primary: #5e6ad2;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f5;
+  --secondary-foreground: #444444;
+  --muted: #f3f4f5;
+  --muted-foreground: #888888;
+  --accent: rgba(0,0,0,0.05);
+  --accent-foreground: #111111;
+  --destructive: #f43f5e;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0,0,0,0.1);
+  --input: rgba(0,0,0,0.1);
+  --ring: #5e6ad2;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #111111;
+  --sidebar-primary: #5e6ad2;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(0,0,0,0.05);
+  --sidebar-accent-foreground: #111111;
+  --sidebar-border: rgba(0,0,0,0.1);
+  --sidebar-ring: #5e6ad2;
+
+  /* Legacy custom properties - light */
   --color-bg: #f7f8f8;
   --color-panel: #ffffff;
   --color-surface: #f3f4f5;
@@ -41,20 +152,69 @@
   --color-text-primary: #111111;
   --color-text-secondary: #444444;
   --color-text-muted: #888888;
+  --color-accent-music: #1ed760;
+  --color-accent-music-hover: #1fdf64;
+  --color-accent-brand: #5e6ad2;
+  --color-accent-brand-hover: #828fff;
+  --color-accent-ai: #7170ff;
+  --color-accent-like: #f43f5e;
   --color-border: rgba(0, 0, 0, 0.1);
   --color-border-subtle: rgba(0, 0, 0, 0.06);
 }
 
-/* Base styles */
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--color-bg);
-  color: var(--color-text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  html {
+    @apply font-sans;
+  }
 }
 
-/* Smooth transitions for theme switching */
-body {
-  transition: background-color 0.3s ease, color 0.3s ease;
+/* ── freesekai gradient ── */
+.freesekai-gradient {
+  background: linear-gradient(135deg, #5e6ad2 0%, #a78bfa 30%, #c084fc 50%, #e879f9 70%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
+
+/* ── Animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+  50% { transform: translateY(-25%); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-fade-in { animation: fadeIn 0.6s ease-out; }
+.animate-fade-in-up { animation: fadeInUp 0.7s ease-out; }
+.animate-fade-in-down { animation: fadeInDown 0.5s ease-out; }
+.animate-bounce-slow { animation: bounce 2s infinite; }
+.animate-pulse-slow { animation: pulse 3s ease-in-out infinite; }
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-1000 { animation-delay: 1s; }

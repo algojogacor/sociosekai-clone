@@ -1,32 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
 import { v4 as uuid } from 'uuid';
+import { getDb, initSchema } from '@/lib/db';
 
-// GET /api/posts/[id]/comments
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const db = getDb();
-  const comments = db.prepare(`
-    SELECT c.*, u.name as author_name
-    FROM comments c JOIN users u ON c.user_id = u.id
-    WHERE c.post_id = ?
-    ORDER BY c.created_at ASC
-  `).all(id);
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    await initSchema();
+    const db = getDb();
+    const { id } = await params;
 
-  return NextResponse.json(comments);
+    const result = await db.execute({
+      sql: `SELECT c.*, u.name as author_name FROM comments c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.post_id = ? ORDER BY c.created_at DESC`,
+      args: [id],
+    });
+
+    return NextResponse.json(result.rows);
+  } catch (e) {
+    console.error('GET /api/posts/[id]/comments error:', e);
+    return NextResponse.json([]);
+  }
 }
 
-// POST /api/posts/[id]/comments
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const db = getDb();
-  const body = await req.json();
-  const userId = body.userId || 'anon';
-  const commentId = uuid();
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    await initSchema();
+    const db = getDb();
+    const { id } = await params;
+    const { body, authorName } = await req.json();
 
-  db.prepare('INSERT OR IGNORE INTO users (id, name) VALUES (?, ?)').run(userId, 'Unknown');
-  db.prepare('INSERT INTO comments (id, post_id, user_id, body) VALUES (?, ?, ?, ?)').run(commentId, id, userId, body.body);
-  db.prepare('UPDATE posts SET comments_count = comments_count + 1 WHERE id = ?').run(id);
+    const uid = 'anon-' + uuid();
+    const commentId = uuid();
 
-  return NextResponse.json({ id: commentId, ok: true });
+    await db.execute({
+      sql: 'INSERT OR IGNORE INTO users (id, name) VALUES (?, ?)',
+      args: [uid, authorName || 'Unknown'],
+    });
+    await db.execute({
+      sql: 'INSERT INTO comments (id, post_id, user_id, body) VALUES (?, ?, ?, ?)',
+      args: [commentId, id, uid, body],
+    });
+    await db.execute({
+      sql: 'UPDATE posts SET comments_count = comments_count + 1 WHERE id = ?',
+      args: [id],
+    });
+
+    return NextResponse.json({ id: commentId, ok: true });
+  } catch (e) {
+    console.error('POST /api/posts/[id]/comments error:', e);
+    return NextResponse.json({ error: 'Failed to add comment' }, { status: 500 });
+  }
 }

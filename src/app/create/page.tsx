@@ -2,9 +2,16 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ArrowLeft, Sparkles, Wand2, Music } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { AiComposer } from '@/components/ai/AiComposer';
 import { AiSuggester } from '@/components/ai/AiSuggester';
 import { searchTracks } from '@/lib/music';
+import { toast } from 'sonner';
 import type { MusicEmbed } from '@/types';
 
 export default function CreatePostPage() {
@@ -12,19 +19,22 @@ export default function CreatePostPage() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [authorName, setAuthorName] = useState('');
+  const [musicQuery, setMusicQuery] = useState('');
   const [musicResults, setMusicResults] = useState<MusicEmbed[]>([]);
   const [selectedMusic, setSelectedMusic] = useState<MusicEmbed | null>(null);
   const [searching, setSearching] = useState(false);
   const [posting, setPosting] = useState(false);
-  const [posted, setPosted] = useState(false);
-  const [authorName, setAuthorName] = useState('');
 
   const handleMusicSearch = async () => {
-    const input = (document.querySelector('input[placeholder="Search iTunes..."]') as HTMLInputElement);
-    const q = input?.value?.trim();
-    if (!q || searching) return;
+    if (!musicQuery.trim() || searching) return;
     setSearching(true);
-    try { setMusicResults(await searchTracks(q, 5)); } catch { setMusicResults([]); }
+    try { 
+      const results = await searchTracks(musicQuery.trim(), 5); 
+      setMusicResults(results); 
+    } catch { 
+      toast.error('Failed to search music'); 
+    }
     finally { setSearching(false); }
   };
 
@@ -45,49 +55,98 @@ export default function CreatePostPage() {
         }),
       });
       if (res.ok) {
-        setTitle(''); setBody(''); setImageUrl('');
-        setMusicResults([]); setSelectedMusic(null); setAuthorName('');
-        setPosted(true);
-        setTimeout(() => { setPosted(false); router.push('/'); }, 1500);
+        setTitle(''); setBody(''); setImageUrl(''); setAuthorName('');
+        setMusicQuery(''); setMusicResults([]); setSelectedMusic(null);
+        toast.success('Posted! Redirecting...');
+        setTimeout(() => router.push('/'), 1000);
+      } else {
+        toast.error('Failed to post');
       }
-    } catch { /* ignore */ }
+    } catch { 
+      toast.error('Network error'); 
+    }
     finally { setPosting(false); }
   };
 
-  const inputClass = "w-full rounded-md border px-4 py-2.5 text-sm outline-none";
-  const inputStyle = { background: 'var(--color-surface)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' } as const;
-
   return (
-    <div className="py-8 pb-20">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text-primary)' }}>Create Post</h1>
+    <div className="py-8 pb-24 px-4 max-w-2xl mx-auto">
+      <Button variant="ghost" size="sm" onClick={() => router.push('/')} className="gap-1 mb-6 text-muted-foreground">
+        <ArrowLeft className="w-4 h-4" /> Back
+      </Button>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>Your Name</label>
-        <input value={authorName} onChange={(e) => setAuthorName(e.target.value)} placeholder="Anonymous" className={inputClass} style={inputStyle} />
+      <h1 className="text-2xl font-bold mb-6 text-foreground">Create Post</h1>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-1.5 text-muted-foreground">Your Name</label>
+          <Input value={authorName} onChange={(e) => setAuthorName(e.target.value)} placeholder="Anonymous" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1.5 text-muted-foreground">Title (optional)</label>
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Give it a title..." />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1.5 text-muted-foreground">What&apos;s on your mind?</label>
+          <Textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder="Share your thoughts..." rows={4} />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1.5 text-muted-foreground">Image URL (optional)</label>
+          <Input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://example.com/image.jpg" />
+        </div>
+
+        {/* Music search */}
+        <div>
+          <label className="block text-sm font-medium mb-1.5 text-muted-foreground flex items-center gap-1">
+            <Music className="w-3.5 h-3.5" /> Music (optional)
+          </label>
+          <div className="flex gap-2">
+            <Input value={musicQuery} onChange={(e) => setMusicQuery(e.target.value)} placeholder="Search iTunes..." onKeyDown={(e) => e.key === 'Enter' && handleMusicSearch()} />
+            <Button variant="outline" onClick={handleMusicSearch} disabled={searching}>
+              {searching ? '...' : 'Search'}
+            </Button>
+          </div>
+          {selectedMusic && (
+            <Card className="mt-2">
+              <CardContent className="flex items-center gap-3 p-3">
+                {selectedMusic.artworkUrl && <img src={selectedMusic.artworkUrl} alt={selectedMusic.trackName} className="w-10 h-10 rounded" />}
+                <div className="flex-1">
+                  <p className="text-sm font-semibold">{selectedMusic.trackName}</p>
+                  <p className="text-xs text-muted-foreground">{selectedMusic.artistName}</p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => setSelectedMusic(null)}>✕</Button>
+              </CardContent>
+            </Card>
+          )}
+          {musicResults.length > 0 && !selectedMusic && (
+            <div className="mt-2 space-y-1">
+              {musicResults.map((track, i) => (
+                <button key={i} onClick={() => { setSelectedMusic(track); setMusicResults([]); }} className="w-full text-left flex items-center gap-3 rounded-md p-2 hover:bg-accent transition-colors">
+                  {track.artworkUrl && <img src={track.artworkUrl} alt={track.trackName} className="w-8 h-8 rounded" />}
+                  <div>
+                    <p className="text-sm font-medium">{track.trackName}</p>
+                    <p className="text-xs text-muted-foreground">{track.artistName}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <Button onClick={handlePost} disabled={!body.trim() || posting} className="gap-1">
+          {posting ? 'Posting...' : 'Post'}
+        </Button>
       </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>Title (optional)</label>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Give it a title..." className={inputClass} style={inputStyle} />
-      </div>
+      <Separator className="my-8" />
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>What&apos;s on your mind?</label>
-        <textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder="Share your thoughts..." rows={4} className={`${inputClass} resize-none`} style={inputStyle} />
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>Image URL (optional)</label>
-        <input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://example.com/image.jpg" className={inputClass} style={inputStyle} />
-      </div>
-
-      <button onClick={handlePost} disabled={!body.trim() || posting} className="rounded-md px-6 py-2.5 text-sm font-medium text-white cursor-pointer border-none disabled:opacity-40" style={{ background: 'var(--color-accent-brand)' }}>
-        {posting ? 'Posting...' : posted ? '✅ Posted!' : 'Post'}
-      </button>
-      {posted && <p className="mt-2 text-sm" style={{ color: 'var(--color-accent-music)' }}>Redirecting to home...</p>}
-
-      <div className="mt-8 border-t pt-6" style={{ borderColor: 'var(--color-border-subtle)' }}>
-        <h2 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>🤖 AI Tools</h2>
+      {/* AI Tools section */}
+      <div>
+        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-[var(--ai)]" /> AI Tools
+        </h2>
         <AiComposer />
         <AiSuggester />
       </div>

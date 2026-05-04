@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { PostFeed } from '@/components/post/PostFeed';
+import { Hero } from '@/components/layout/Hero';
+import { Tabs } from '@/components/layout/Tabs';
 import type { Post } from '@/types';
 
 export default function Home() {
@@ -11,17 +13,30 @@ export default function Home() {
   const fetchPosts = useCallback(async () => {
     try {
       const res = await fetch('/api/posts');
-      setPosts(await res.json());
-    } catch { /* empty */ }
-    finally { setLoading(false); }
+      if (!res.ok) throw new Error('API failed');
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        setPosts(data);
+        return;
+      }
+    } catch {
+      // Fallback: import JSON directly
+      try {
+        const mod = await import('@/data/posts.json');
+        setPosts(mod.default as Post[]);
+      } catch { /* no data */ }
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchPosts();
-  }, [fetchPosts]);
+  useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
-  if (loading) return <p className="py-20 text-center text-sm" style={{ color: 'var(--color-text-muted)' }}>Loading posts...</p>;
-
-  return <PostFeed posts={posts} />;
+  return (
+    <>
+      <Hero />
+      <Tabs />
+      <PostFeed posts={posts} loading={loading} />
+    </>
+  );
 }

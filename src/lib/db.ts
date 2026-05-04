@@ -1,30 +1,37 @@
-import Database from 'better-sqlite3';
-import path from 'path';
+import { createClient, Client } from '@libsql/client';
 
-const DB_PATH = path.join(process.cwd(), 'sociosekai.db');
+let client: Client;
 
-let db: Database.Database;
+export function getDb(): Client {
+  if (!client) {
+    const url = process.env.TURSO_DATABASE_URL;
+    const authToken = process.env.TURSO_AUTH_TOKEN;
 
-export function getDb(): Database.Database {
-  if (!db) {
-    db = new Database(DB_PATH);
-    db.pragma('journal_mode = WAL');
-    db.pragma('foreign_keys = ON');
-    initSchema();
+    if (!url || !authToken) {
+      throw new Error('TURSO_DATABASE_URL and TURSO_AUTH_TOKEN must be set');
+    }
+
+    client = createClient({ url, authToken });
+    console.log('[Turso] Connected to', url);
   }
-  return db;
+  return client;
 }
 
-function initSchema() {
-  db.exec(`
+export async function initSchema() {
+  const db = getDb();
+  
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL DEFAULT 'Unknown',
       email TEXT UNIQUE,
+      password_hash TEXT,
       avatar TEXT,
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
-    );
+    )
+  `);
 
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS posts (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -41,8 +48,10 @@ function initSchema() {
       shares_count INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       FOREIGN KEY (user_id) REFERENCES users(id)
-    );
+    )
+  `);
 
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS likes (
       user_id TEXT NOT NULL,
       post_id TEXT NOT NULL,
@@ -50,8 +59,10 @@ function initSchema() {
       PRIMARY KEY (user_id, post_id),
       FOREIGN KEY (user_id) REFERENCES users(id),
       FOREIGN KEY (post_id) REFERENCES posts(id)
-    );
+    )
+  `);
 
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS comments (
       id TEXT PRIMARY KEY,
       post_id TEXT NOT NULL,
@@ -60,8 +71,10 @@ function initSchema() {
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       FOREIGN KEY (post_id) REFERENCES posts(id),
       FOREIGN KEY (user_id) REFERENCES users(id)
-    );
+    )
+  `);
 
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS rooms (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
@@ -69,10 +82,12 @@ function initSchema() {
       created_by TEXT NOT NULL,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       FOREIGN KEY (created_by) REFERENCES users(id)
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_posts_created ON posts(created_at DESC);
-    CREATE INDEX IF NOT EXISTS idx_likes_post ON likes(post_id);
-    CREATE INDEX IF NOT EXISTS idx_comments_post ON comments(post_id);
+    )
   `);
+
+  await db.execute('CREATE INDEX IF NOT EXISTS idx_posts_created ON posts(created_at DESC)');
+  await db.execute('CREATE INDEX IF NOT EXISTS idx_likes_post ON likes(post_id)');
+  await db.execute('CREATE INDEX IF NOT EXISTS idx_comments_post ON comments(post_id)');
+  
+  console.log('[Turso] Schema initialized');
 }
