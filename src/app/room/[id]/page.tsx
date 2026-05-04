@@ -68,7 +68,7 @@ export default function RoomChatPage() {
       </div>
 
       {/* Input */}
-      <div className="px-4 py-3 border-t border-border/30">
+      <div className="px-4 py-3 border-t border-border/30 pb-24 md:pb-4">
         <div className="flex gap-2">
           <input
             type="text"
