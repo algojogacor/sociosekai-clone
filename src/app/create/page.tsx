@@ -28,15 +28,7 @@ export default function CreatePostPage() {
   const [searching, setSearching] = useState(false);
   const [posting, setPosting] = useState(false);
 
-  // Auth guard
-  useEffect(() => {
-    if (!loading && !user) {
-      toast.error('Please sign in to create a post');
-      router.push('/login');
-    }
-  }, [user, loading, router]);
-
-  // Auto-fill author name
+  // Auto-fill author name from session
   useEffect(() => {
     if (user?.name) setAuthorName(user.name);
   }, [user]);
@@ -82,16 +74,6 @@ export default function CreatePostPage() {
     }
     finally { setPosting(false); }
   };
-
-  if (loading) {
-    return (
-      <div className="flex min-h-[80vh] items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!user) return null;
 
   return (
     <div className="py-8 pb-24 px-4 max-w-2xl mx-auto">
