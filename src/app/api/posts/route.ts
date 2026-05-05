@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
 import { getDb, initSchema } from '@/lib/db';
+import { getSessionUser } from '@/lib/auth';
 
 export async function GET() {
   try {
@@ -24,15 +25,13 @@ export async function GET() {
         artistName: p.music_artist_name || '',
         albumName: p.music_album_name || '',
         artworkUrl: p.music_artwork_url || '',
+        previewUrl: p.music_preview_url || undefined,
         itunesUrl: p.music_itunes_url || '',
       } : undefined,
       likes: p.likes_count,
       comments: p.comments_count,
       shares: p.shares_count,
-      createdAt: new Date(p.created_at + 'Z').toLocaleString('en-US', {
-        month: 'short', day: 'numeric', year: 'numeric',
-        hour: 'numeric', minute: '2-digit', hour12: true,
-      }),
+      createdAt: p.created_at,
     }));
 
     return NextResponse.json(posts);
@@ -43,28 +42,45 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  // Auth check — only signed-in users can post
+  const user = await getSessionUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Sign in to post' }, { status: 401 });
+  }
+
   try {
     await initSchema();
     const db = getDb();
     
-    const { title, body, imageUrl, music, authorName, userId } = await req.json();
-    const uid = userId || 'anon-' + uuid();
+    const { title, body, imageUrl, music } = await req.json();
+    if (!body?.trim()) return NextResponse.json({ error: 'Body required' }, { status: 400 });
+
     const postId = uuid();
+    const uid = user.email; // use email as stable user ID
 
-    // Ensure user exists
-    await db.execute({
-      sql: 'INSERT OR IGNORE INTO users (id, name) VALUES (?, ?)',
-      args: [uid, authorName || 'Unknown'],
+    // Ensure user exists in DB — look up actual UUID first
+    const existingUser = await db.execute({
+      sql: 'SELECT id FROM users WHERE email = ?',
+      args: [user.email],
     });
+    const dbUserId = existingUser.rows[0]?.id as string || uid;
+    
+    if (!existingUser.rows[0]) {
+      await db.execute({
+        sql: 'INSERT INTO users (id, name, email) VALUES (?, ?, ?)',
+        args: [uid, user.name || 'User', user.email],
+      });
+    }
 
-    // Insert post
+    // Insert post using actual DB user ID
     await db.execute({
-      sql: `INSERT INTO posts (id, user_id, title, body, image_url, music_track_name, music_artist_name, music_album_name, music_artwork_url, music_itunes_url)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      sql: `INSERT INTO posts (id, user_id, title, body, image_url, music_track_name, music_artist_name, music_album_name, music_artwork_url, music_preview_url, music_itunes_url)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       args: [
-        postId, uid, title || null, body, imageUrl || null,
+        postId, dbUserId, title || null, body, imageUrl || null,
         music?.trackName || null, music?.artistName || null,
         music?.albumName || null, music?.artworkUrl || null,
+        music?.previewUrl || null,
         music?.itunesUrl || null,
       ],
     });

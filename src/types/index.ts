@@ -23,5 +23,17 @@ export interface MusicEmbed {
   itunesUrl: string;
 }
 
+export interface Room {
+  id: string;
+  name: string;
+}
+
+export interface Message {
+  id: string;
+  body: string;
+  author_name: string;
+  created_at: string;
+}
+
 export type TabType = 'posts' | 'blogs';
 export type Theme = 'dark' | 'light';

@@ -10,7 +10,7 @@ interface Message {
 export function AiChat() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'ai', content: 'Hi! I\'m the SOCIOSEKAI AI assistant. How can I help you?' },
+    { role: 'ai', content: 'Hi! I\'m the JalaForum AI assistant. How can I help you?' },
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ export function AiChat() {
         body: JSON.stringify({
           model: 'deepseek-chat',
           messages: [
-            { role: 'system', content: 'You are a helpful AI assistant for SOCIOSEKAI, a multimodal forum. Be friendly and concise.' },
+            { role: 'system', content: 'You are a helpful AI assistant for JalaForum, a forum for discussion and community in the JalaJO ecosystem. Be friendly and concise.' },
             ...messages.map((m) => ({ role: m.role === 'ai' ? 'assistant' : 'user', content: m.content })),
             { role: 'user', content: userMsg.content },
           ],

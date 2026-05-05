@@ -22,7 +22,7 @@ export default function SignupPage() {
     const result = await signup(name, email, password);
     setSubmitting(false);
     if (result.ok) {
-      toast.success('Account created! Welcome to SOCIOSEKAI.');
+      toast.success('Account created! Welcome to JalaForum.');
       router.push('/');
     } else {
       toast.error(result.error || 'Signup failed');
@@ -34,7 +34,7 @@ export default function SignupPage() {
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold tracking-tight">Create Account</h1>
-          <p className="text-sm text-muted-foreground mt-1">Join SOCIOSEKAI community</p>
+          <p className="text-sm text-muted-foreground mt-1">Join JalaForum community</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

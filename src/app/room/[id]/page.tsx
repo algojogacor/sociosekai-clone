@@ -3,11 +3,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Send } from 'lucide-react';
+import type { Message } from '@/types';
 
 export default function RoomChatPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [body, setBody] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
 

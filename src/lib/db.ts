@@ -42,6 +42,7 @@ export async function initSchema() {
       music_artist_name TEXT,
       music_album_name TEXT,
       music_artwork_url TEXT,
+      music_preview_url TEXT,
       music_itunes_url TEXT,
       likes_count INTEGER NOT NULL DEFAULT 0,
       comments_count INTEGER NOT NULL DEFAULT 0,

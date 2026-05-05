@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
 import { getDb, initSchema } from '@/lib/db';
+import { getSessionUser } from '@/lib/auth';
 
 export async function GET(
   _req: NextRequest,
@@ -29,18 +30,25 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Auth check
+  const sessionUser = await getSessionUser();
+  if (!sessionUser) {
+    return NextResponse.json({ error: 'Sign in to comment' }, { status: 401 });
+  }
+
   try {
     await initSchema();
     const db = getDb();
     const { id } = await params;
-    const { body, authorName } = await req.json();
+    const { body } = await req.json();
 
-    const uid = 'anon-' + uuid();
+    const postId = id;
     const commentId = uuid();
+    const uid = sessionUser.email;
 
     await db.execute({
-      sql: 'INSERT OR IGNORE INTO users (id, name) VALUES (?, ?)',
-      args: [uid, authorName || 'Unknown'],
+      sql: 'INSERT OR IGNORE INTO users (id, name, email) VALUES (?, ?, ?)',
+      args: [uid, sessionUser.name || 'User', sessionUser.email],
     });
     await db.execute({
       sql: 'INSERT INTO comments (id, post_id, user_id, body) VALUES (?, ?, ?, ?)',

@@ -2,9 +2,13 @@
 
 import { useState } from 'react';
 import { Heart, MessageCircle, Share2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
-export function PostActions({ postId, likes: initialLikes, comments, shares }: {
+export function PostActions({
+  postId,
+  likes: initialLikes,
+  comments,
+  shares,
+}: {
   postId: string;
   likes: number;
   comments: number;
@@ -18,32 +22,29 @@ export function PostActions({ postId, likes: initialLikes, comments, shares }: {
     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
     try {
       await fetch(`/api/posts/${postId}/like`, { method: 'POST' });
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <Button
-        variant="ghost"
-        size="sm"
+    <div className="flex items-center gap-2">
+      <button
         onClick={handleLike}
-        className={`gap-1.5 transition-colors ${
-          liked ? 'text-[var(--like)] hover:text-[var(--like)]' : 'text-muted-foreground'
-        }`}
+        className={`action-btn ${liked ? 'liked' : ''}`}
+        aria-label={liked ? 'Unlike' : 'Like'}
       >
-        <Heart className={`w-4 h-4 ${liked ? 'fill-current' : ''}`} />
-        <span className="text-xs">{likeCount}</span>
-      </Button>
-
-      <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
+        <Heart className={`w-4 h-4 transition-all ${liked ? 'fill-current' : ''}`} />
+        <span>{likeCount}</span>
+      </button>
+      <button className="action-btn">
         <MessageCircle className="w-4 h-4" />
-        <span className="text-xs">{comments}</span>
-      </Button>
-
-      <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
+        <span>{comments}</span>
+      </button>
+      <button className="action-btn">
         <Share2 className="w-4 h-4" />
-        <span className="text-xs">{shares}</span>
-      </Button>
+        <span>{shares}</span>
+      </button>
     </div>
   );
 }

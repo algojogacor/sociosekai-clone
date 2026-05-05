@@ -7,10 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, DoorOpen, Key, Lock } from 'lucide-react';
 import { toast } from 'sonner';
+import type { Room } from '@/types';
 
 export default function RoomPage() {
   const router = useRouter();
-  const [rooms, setRooms] = useState<any[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState('');
   const [newKey, setNewKey] = useState('');
