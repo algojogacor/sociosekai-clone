@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
 import { getDb, initSchema } from '@/lib/db';
-import { getSessionUser } from '@/lib/auth';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET(
   _req: NextRequest,
@@ -31,10 +31,9 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   // Auth check
-  const sessionUser = await getSessionUser();
-  if (!sessionUser) {
-    return NextResponse.json({ error: 'Sign in to comment' }, { status: 401 });
-  }
+  const auth = await requireAuth();
+  if (!auth.ok) return auth.response;
+  const sessionUser = auth.session.user!;
 
   try {
     await initSchema();

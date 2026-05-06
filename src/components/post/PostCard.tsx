@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { Post } from '@/types';
 import { CommentSection } from './CommentSection';
 import { MusicEmbed } from '@/components/music/MusicEmbed';
-import { Heart, Repeat2, Share2, MessageCircle } from 'lucide-react';
+import { Heart, Repeat2, Share2, MessageCircle, Bot, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 function formatTime(ts: string) {
@@ -21,11 +21,42 @@ export function PostCard({ post }: { post: Post }) {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likes || 0);
   const [showComments, setShowComments] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResponse, setAiResponse] = useState<string | null>(null);
 
   const handleLike = async () => {
     setLiked(!liked);
     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
     try { await fetch(`/api/posts/${post.id}/like`, { method: 'POST' }); } catch { /* noop */ }
+  };
+
+  const handleAskAI = async () => {
+    if (aiLoading) return;
+    setAiLoading(true);
+    setAiResponse(null);
+    try {
+      const content = [post.title, post.body].filter(Boolean).join('\n\n');
+      const res = await fetch('https://jala-ai.vercel.app/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: `Analyze this forum post and provide insights, additional context, or a thoughtful reply:\n\n${content}` }],
+        }),
+      });
+      const data = await res.json();
+      const reply = data.reply || data.message || data.text || JSON.stringify(data);
+      setAiResponse(reply);
+
+      // Log activity to JalaHub
+      fetch('https://jalahub.vercel.app/api/activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: 'forum-user', product: 'forum', action: 'ai_assist', detail: 'AI response in thread' }),
+      }).catch(() => {});
+    } catch {
+      toast.error('AI request failed');
+    }
+    setAiLoading(false);
   };
 
   return (
@@ -70,7 +101,7 @@ export function PostCard({ post }: { post: Post }) {
           )}
 
           {/* Twitter/X-style action bar */}
-          <div className="flex items-center justify-between pt-2 -ml-2" style={{ maxWidth: '400px' }}>
+          <div className="flex items-center justify-between pt-2 -ml-2" style={{ maxWidth: '450px' }}>
             {/* Comment button */}
             <button onClick={() => setShowComments(!showComments)} className="action-btn px-2 py-1 group">
               <MessageCircle className="w-4 h-4 transition-transform group-hover:scale-110" />
@@ -93,12 +124,29 @@ export function PostCard({ post }: { post: Post }) {
             <button className="action-btn px-2 py-1 group">
               <Share2 className="w-4 h-4 transition-transform group-hover:scale-110" />
             </button>
+
+            {/* Ask JalaAI button */}
+            <button onClick={handleAskAI} disabled={aiLoading} className="action-btn px-2 py-1 group" style={{ color: 'var(--brand)' }}>
+              {aiLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4 transition-transform group-hover:scale-110" />}
+              <span className="text-xs">AI</span>
+            </button>
           </div>
 
           {/* Comment section — shown below */}
           {showComments && (
             <div className="pt-2" style={{ borderTop: '1px solid var(--hairline)' }}>
               <CommentSection postId={post.id} />
+            </div>
+          )}
+
+          {/* AI response — shown below */}
+          {aiResponse && (
+            <div className="pt-2" style={{ borderTop: '1px solid var(--hairline)' }}>
+              <div className="flex items-center gap-1.5 mb-2">
+                <Bot className="w-3.5 h-3.5" style={{ color: 'var(--brand)' }} />
+                <span className="text-xs font-semibold" style={{ color: 'var(--brand)' }}>JalaAI</span>
+              </div>
+              <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: 'var(--ink-muted)' }}>{aiResponse}</p>
             </div>
           )}
         </div>

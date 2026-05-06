@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
 import { getDb, initSchema } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET(
   _req: NextRequest,
@@ -29,22 +30,27 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Auth check
+  const auth = await requireAuth();
+  if (!auth.ok) return auth.response;
+  const user = auth.session.user!;
+
   try {
     await initSchema();
     const db = getDb();
     const { id } = await params;
-    const { body, authorName, userId } = await req.json();
+    const { body } = await req.json();
 
     if (!body?.trim()) {
       return NextResponse.json({ error: 'Message body required' }, { status: 400 });
     }
 
-    const uid = userId || 'anon-' + uuid();
+    const uid = user.email;
     const msgId = uuid();
 
     await db.execute({
-      sql: 'INSERT OR IGNORE INTO users (id, name) VALUES (?, ?)',
-      args: [uid, authorName || 'Unknown'],
+      sql: 'INSERT OR IGNORE INTO users (id, name, email) VALUES (?, ?, ?)',
+      args: [uid, user.name || 'User', user.email],
     });
     await db.execute({
       sql: 'INSERT INTO room_messages (id, room_id, user_id, body) VALUES (?, ?, ?, ?)',

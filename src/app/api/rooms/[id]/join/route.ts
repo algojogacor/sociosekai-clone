@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb, initSchema } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Auth check
+  const auth = await requireAuth();
+  if (!auth.ok) return auth.response;
+
   try {
     await initSchema();
     const db = getDb();

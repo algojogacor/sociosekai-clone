@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
 import { getDb, initSchema } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET() {
   try {
@@ -17,10 +18,15 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  // Auth check
+  const auth = await requireAuth();
+  if (!auth.ok) return auth.response;
+  const user = auth.session.user!;
+
   try {
     await initSchema();
     const db = getDb();
-    const { name, keyAccess, userId } = await req.json();
+    const { name, keyAccess } = await req.json();
     
     if (!name || !keyAccess) {
       return NextResponse.json({ error: 'Name and key access required' }, { status: 400 });
@@ -29,7 +35,7 @@ export async function POST(req: NextRequest) {
     const id = uuid();
     await db.execute({
       sql: 'INSERT INTO rooms (id, name, key_access, created_by) VALUES (?, ?, ?, ?)',
-      args: [id, name, keyAccess, userId || 'anon'],
+      args: [id, name, keyAccess, user.email],
     });
 
     return NextResponse.json({ id, name, key_access: keyAccess, ok: true });

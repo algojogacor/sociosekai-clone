@@ -3,9 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { Menu, Plus, MessageSquare, BookOpen, User, LogOut, LogIn, Sparkles } from 'lucide-react';
-import { useAuth } from '@/lib/auth-context';
-import { useRouter } from 'next/navigation';
+import { Menu, Plus, MessageSquare, BookOpen, Sparkles } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,13 +12,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import JalaHubUser from '@/components/JalaHubUser';
 
 const navLinks = [
   { href: '/create', label: 'Create Post', icon: Plus },
@@ -36,8 +29,6 @@ const otherLinks = [
 ];
 
 export function Header() {
-  const { user, logout } = useAuth();
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -93,7 +84,7 @@ export function Header() {
           ))}
 
           <a
-            href="https://jalajo.vercel.app/algojo"
+            href="https://jalahub.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
             className="nav-link inline-flex items-center gap-1.5"
@@ -108,7 +99,7 @@ export function Header() {
             }}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Algojo</span>
+            <span>JalaHub</span>
           </a>
 
           <NavigationMenu>
@@ -156,39 +147,7 @@ export function Header() {
 
           <div style={{ borderLeft: '1px solid var(--hairline)', height: '24px', margin: '0 4px' }} />
 
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className="inline-flex items-center text-sm font-medium rounded-md px-3 h-8 transition-all"
-              style={{
-                background: 'var(--surface-2)',
-                color: 'var(--ink-subtle)',
-                border: '1px solid var(--hairline)',
-              }}
-            >
-              {user ? user.name : 'Account'}
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {user ? (
-                <>
-                  <DropdownMenuItem onClick={() => router.push('/profile')}>
-                    <User className="mr-2 h-4 w-4" /> Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => { logout(); router.push('/'); }}>
-                    <LogOut className="mr-2 h-4 w-4" /> Sign Out
-                  </DropdownMenuItem>
-                </>
-              ) : (
-                <>
-                  <DropdownMenuItem onClick={() => router.push('/login')}>
-                    <LogIn className="mr-2 h-4 w-4" /> Sign In
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/signup')}>
-                    <User className="mr-2 h-4 w-4" /> Register
-                  </DropdownMenuItem>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <JalaHubUser />
         </div>
       </nav>
 
@@ -233,7 +192,7 @@ export function Header() {
                   </Link>
                 ))}
                 <a
-                  href="https://jalajo.vercel.app/algojo"
+                  href="https://jalahub.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm transition-colors"
@@ -242,7 +201,7 @@ export function Header() {
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--brand)'; }}
                 >
                   <Sparkles className="w-4 h-4" />
-                  Algojo
+                  JalaHub
                 </a>
               </div>
             </SheetContent>

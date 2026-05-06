@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
-    document.cookie = 'session=; Max-Age=0; path=/';
+    document.cookie = 'jalaid_token=; Max-Age=0; path=/';
     setUser(null);
   };
 

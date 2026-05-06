@@ -1,7 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
 import { getDb, initSchema } from '@/lib/db';
-import { getSessionUser } from '@/lib/auth';
+import { requireAuth } from '@/lib/auth';
+
+// ── In-memory rate limiter ──────────────────────────────────────────
+// Track post timestamps per user.  10+ posts in 60s → auto-freeze.
+const RATE_LIMIT_WINDOW = 60_000;      // 1 minute
+const RATE_LIMIT_MAX    = 10;          // max posts per window
+
+const postTimestamps = new Map<string, number[]>();
+
+async function freezeUser(userId: string) {
+  const url = 'https://sociosekai-algojogacor.aws-ap-northeast-1.turso.io/v2/pipeline';
+  const token = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3Nzc4ODcyNzksImlkIjoiMDE5ZGYyNTYtYWUwMS03OWZmLWFlODItYzE5ZmViMTI1OTBhIiwicmlkIjoiN2U0MmUwNWQtODg0Yi00Yjg3LTlmNzctMWM3NTIyZjcwNTY4In0.1lxG7yNHrCyjcK3Z3jxp5a7roozGZt26UbbFpoXJ2c2Z3LrUoAjRXQeWpmG_SCB-MPKpb9P1Rdnrlb9mMIzBBw';
+
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        requests: [{
+          type: 'execute',
+          stmt: {
+            sql: 'UPDATE users SET frozen=1, freeze_reason=? WHERE id=?',
+            args: ['Spam: 10+ posts/min', userId],
+          },
+        }],
+      }),
+    });
+    console.log('🔒 Frozen user via Turso pipeline:', userId);
+  } catch (e) {
+    console.error('Turso pipeline freeze failed:', e);
+  }
+}
 
 export async function GET() {
   try {
@@ -43,10 +77,27 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   // Auth check — only signed-in users can post
-  const user = await getSessionUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Sign in to post' }, { status: 401 });
+  const auth = await requireAuth();
+  if (!auth.ok) return auth.response;
+  const user = auth.session.user!;
+
+  // ── Rate-limit check ──────────────────────────────────────
+  const now = Date.now();
+  const uid = user.email;
+  const stamps = postTimestamps.get(uid) || [];
+  // prune expired
+  const fresh = stamps.filter(t => now - t < RATE_LIMIT_WINDOW);
+  // check before adding current request
+  if (fresh.length >= RATE_LIMIT_MAX) {
+    // trigger freeze (fire-and-forget)
+    freezeUser(uid);
+    return NextResponse.json(
+      { error: 'Account frozen — too many posts', adminContact: null },
+      { status: 429 },
+    );
   }
+  fresh.push(now);
+  postTimestamps.set(uid, fresh);
 
   try {
     await initSchema();
@@ -56,7 +107,6 @@ export async function POST(req: NextRequest) {
     if (!body?.trim()) return NextResponse.json({ error: 'Body required' }, { status: 400 });
 
     const postId = uuid();
-    const uid = user.email; // use email as stable user ID
 
     // Ensure user exists in DB — look up actual UUID first
     const existingUser = await db.execute({
@@ -85,9 +135,23 @@ export async function POST(req: NextRequest) {
       ],
     });
 
+    // Log activity to JalaHub (fire-and-forget)
+    logActivity(dbUserId, 'forum', 'post_created', `Post: ${(title || body).substring(0, 80)}`);
+
     return NextResponse.json({ id: postId, ok: true });
   } catch (e) {
     console.error('POST /api/posts error:', e);
     return NextResponse.json({ error: 'Failed to create post' }, { status: 500 });
   }
+}
+
+// Helper: log activity to JalaHub (fire-and-forget)
+async function logActivity(userId: string, product: string, action: string, detail: string) {
+  try {
+    await fetch('https://jalahub.vercel.app/api/activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, product, action, detail }),
+    });
+  } catch { /* noop */ }
 }

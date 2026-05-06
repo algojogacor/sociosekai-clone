@@ -6,7 +6,7 @@ import { createRipple } from '@/hooks/useScrollReveal';
 export function Hero() {
   return (
     <div className="relative w-full overflow-hidden" style={{ height: '90vh', minHeight: '600px', background: 'var(--canvas)' }}>
-      {/* Gradient mesh blobs — 4 blobs in accent #7170ff, 80px blur, 0.35 opacity */}
+      {/* Gradient mesh blobs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="blob-mesh blob-1" />
         <div className="blob-mesh blob-2" />
@@ -14,9 +14,12 @@ export function Hero() {
         <div className="blob-mesh blob-4" />
       </div>
 
+      {/* Strong centered radial glow — matching landing page */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[700px] pointer-events-none z-10" style={{ background: 'radial-gradient(ellipse, rgba(94,106,210,0.15) 0%, rgba(94,106,210,0.05) 35%, transparent 70%)' }} />
+
       {/* Gradient overlay for depth */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none z-0"
         style={{
           background: 'radial-gradient(ellipse at 50% 0%, transparent 40%, var(--canvas) 100%)',
         }}
@@ -32,7 +35,7 @@ export function Hero() {
             width={80}
             height={80}
             priority
-            className="drop-shadow-[0_0_48px_rgba(113,112,255,0.18)]"
+            className="drop-shadow-[0_0_64px_rgba(94,106,210,0.35)]"
           />
         </div>
 
@@ -44,7 +47,7 @@ export function Hero() {
             animation: 'fade-in 0.7s 0.15s cubic-bezier(0.16,1,0.3,1) both',
           }}
         >
-          <span style={{ color: 'var(--product-accent)' }}>Jala</span>
+          <span style={{ color: 'var(--brand)' }}>Jala</span>
           <span style={{ color: 'var(--ink)' }}>Forum</span>
         </h1>
 

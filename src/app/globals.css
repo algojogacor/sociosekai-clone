@@ -1,25 +1,26 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @custom-variant dark (&:is(.dark *));
 /* ═══════════════════════════════════════════════════════════
    JalaForum — JalaJO Design System
    Dark-only. Hairline borders. Premium micro-interactions.
-   Product accent: #7170ff (JalaForum)
+   Brand accent: #5e6ad2 (JalaJO indigo)
    
    MICRO-INTERACTIONS ADDED:
    1. Button ripple — CTA buttons get an expanding circle on click
    2. Hover card glow — post/feature cards get a gradient glow + subtle scale on hover
    3. Morphing like button — idle heart → filled heart with scale bounce animation
    4. Scroll reveal — IntersectionObserver fade+slideUp with staggered children (100ms)
-   5. Gradient mesh blobs — hero background 4 blobs in #7170ff, 80px blur, 0.35 opacity, 14s staggered
+   5. Gradient mesh blobs — hero background 4 blobs in #5e6ad2, 80px blur, 0.35 opacity, 14s staggered
    6. Sticky navbar — transparent → solid rgba(1,1,2,0.92)+backdrop-blur+hairline border after 80px scroll
    7. btn-cta — hover translateY(-2px)+brightness(1.12), active scale(0.98), touch-safe
    8. card-glow — hover translateY(-2px)+scale(1.01)+box-shadow with gradient glow behind
    ═══════════════════════════════════════════════════════════ */
 
 @theme inline {
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Satoshi', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -71,9 +72,9 @@
   --hairline-strong: #34343a;
   --brand: #5e6ad2;
   --brand-hover: #828fff;
-  --product-accent: #7170ff;
-  --product-accent-glow: rgba(113, 112, 255, 0.15);
-  --product-accent-soft: rgba(113, 112, 255, 0.08);
+  --product-accent: #5e6ad2;
+  --product-accent-glow: rgba(94, 106, 210, 0.15);
+  --product-accent-soft: rgba(94, 106, 210, 0.08);
   --success: #27a644;
   --destructive: #f43f5e;
   --destructive-foreground: #ffffff;
@@ -172,7 +173,7 @@
 .post-card:hover {
   border-color: var(--hairline-strong);
   transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 8px 30px rgba(113, 112, 255, 0.06);
+  box-shadow: 0 8px 30px rgba(94, 106, 210, 0.06);
 }
 .post-card:active {
   transform: scale(0.995);
@@ -242,12 +243,12 @@
   position: relative;
   overflow: hidden;
   transition: transform 0.2s cubic-bezier(0.16,1,0.3,1), filter 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 8px rgba(113,112,255,0.25);
+  box-shadow: 0 2px 8px rgba(94,106,210,0.25);
 }
 .btn-primary:hover {
   filter: brightness(1.12);
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(113,112,255,0.35);
+  box-shadow: 0 4px 16px rgba(94,106,210,0.35);
 }
 .btn-primary:active {
   transform: scale(0.98);
@@ -256,7 +257,7 @@
   .btn-primary:hover {
     filter: none;
     transform: none;
-    box-shadow: 0 2px 8px rgba(113,112,255,0.25);
+    box-shadow: 0 2px 8px rgba(94,106,210,0.25);
   }
   .btn-primary:active {
     transform: scale(0.96);
@@ -524,7 +525,7 @@
 .card-glow:hover {
   border-color: var(--hairline-strong);
   transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 8px 30px rgba(113, 112, 255, 0.06);
+  box-shadow: 0 8px 30px rgba(94, 106, 210, 0.06);
 }
 .card-glow:active {
   transform: scale(0.995);
@@ -548,12 +549,12 @@
   padding: 0.625rem 1.5rem;
   font-size: 0.875rem;
   transition: transform 0.2s cubic-bezier(0.16,1,0.3,1), filter 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 8px rgba(113,112,255,0.25);
+  box-shadow: 0 2px 8px rgba(94,106,210,0.25);
 }
 .btn-cta:hover {
   filter: brightness(1.12);
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(113,112,255,0.35);
+  box-shadow: 0 4px 16px rgba(94,106,210,0.35);
 }
 .btn-cta:active {
   transform: scale(0.98);
@@ -562,7 +563,7 @@
   .btn-cta:hover {
     filter: none;
     transform: none;
-    box-shadow: 0 2px 8px rgba(113,112,255,0.25);
+    box-shadow: 0 2px 8px rgba(94,106,210,0.25);
   }
   .btn-cta:active {
     transform: scale(0.96);

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { requireAuth } from '@/lib/auth';
 
 const CLOUD_NAME = 'dlxvi2xx4';
 const API_KEY = '479171624498439';
@@ -7,6 +8,10 @@ const API_SECRET = 'DZFf-yVKCk-X9JCYpmAXpOJlHHk';
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 export async function POST(req: NextRequest) {
+  // Auth check
+  const auth = await requireAuth();
+  if (!auth.ok) return auth.response;
+
   try {
     const form = await req.formData();
     const file = form.get('file') as File;

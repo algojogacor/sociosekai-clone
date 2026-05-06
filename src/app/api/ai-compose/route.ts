@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
+  // Auth check
+  const auth = await requireAuth();
+  if (!auth.ok) return auth.response;
+
   try {
     const { prompt } = await req.json();
     if (!prompt) return NextResponse.json({ error: 'No prompt' }, { status: 400 });

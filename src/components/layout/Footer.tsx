@@ -7,7 +7,7 @@ const products = [
   { name: 'JalaJO', href: 'https://jalajo.vercel.app', description: 'AI Assistant' },
   { name: 'JalaForum', href: '/', description: 'Community Hub' },
   { name: 'Blogs', href: '/blogs', description: 'Articles & Insights' },
-  { name: 'Algojo', href: 'https://jalajo.vercel.app/algojo', description: 'Tech Orator' },
+  { name: 'JalaHub', href: 'https://jalahub.vercel.app', description: 'Your hub for everything' },
 ];
 
 const company = [
